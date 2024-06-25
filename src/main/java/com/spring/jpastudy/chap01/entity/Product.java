@@ -7,7 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter @ToString
+@Getter
+@ToString(exclude = "nickName")
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,12 +23,14 @@ public class Product {
     @Column(name="prod_id")
     private Long id; // PK
 
+    @Setter
     @Column(name="prod_nm", length=30, nullable = false)
     private String name; // 상품명
 
     @Column(name="price")
     private int price; // 상품 가격
 
+    @Setter
     @Column(nullable = false)
 //    @Enumerated(EnumType.ORDINAL)
     @Enumerated(EnumType.STRING)
