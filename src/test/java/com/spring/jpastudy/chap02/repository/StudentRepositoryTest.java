@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@Rollback(false)
 class StudentRepositoryTest {
 
     @Autowired
@@ -110,7 +110,49 @@ class StudentRepositoryTest {
         System.out.println("\n\n\n\n");
     }
 
+    @Test
+    @DisplayName("JPQL로 학생 조회하기")
+    void jpqlTest() {
+        //given
+        String city = "제주도";
+        //when
+        Student student = studentRepository.getByCityWithJPQL(city)
+                // 학생이 조회가 안되면 예외를 발생시켜라
+                .orElseThrow(()-> new RuntimeException("학생이 없음!"));
+        //then
+        assertNotNull(student);
+        // 에러가 나면 통과
+        // assertThrows(RuntimeException.class, () -> new RuntimeException());
+        System.out.println("\n\n\n\n"+"student = " + student+"\n\n\n\n");
+    }
 
+    @Test
+    @DisplayName("JPQL로 이름이 포함된 학생목록 조회하기")
+    void jpqlTest2() {
+        //given
+        String containingName = "춘";
+        //when
+        List<Student> students = studentRepository.searchByNameWithJPQL(containingName);
+
+        //then
+        System.out.println("\n*****\n\n");
+        students.forEach(System.out::println);
+        System.out.println("\n*****\n\n");
+    }
+
+    @Test
+    @DisplayName("JPQL로 삭제하기")
+    void deleteJpqlTest() {
+        //given
+        String name = "어피치";
+        String city = "제주도";
+
+        //when
+        studentRepository.deleteByNameAndCityWithJPQL(name, city);
+
+        //then
+        assertEquals(studentRepository.findByName(name).size(), 0);
+    }
 
 
 
