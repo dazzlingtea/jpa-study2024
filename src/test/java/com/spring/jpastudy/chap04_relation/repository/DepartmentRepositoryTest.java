@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(false)
+@Rollback
 class DepartmentRepositoryTest {
 
     @Autowired
@@ -54,7 +54,7 @@ class DepartmentRepositoryTest {
         Employee employee = employeeRepository.findById(3L).orElseThrow();
 
         // 1번 부서 정보 조회
-        Department department = departmentRepository.findById(1L).orElseThrow();
+        Department department = departmentRepository.findById(2L).orElseThrow();
 
         //when
         /*
