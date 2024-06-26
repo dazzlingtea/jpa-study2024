@@ -84,6 +84,11 @@ class EmployeeRepositoryTest {
         System.out.println("\n\n\n");
         System.out.println("employee = " + employee);
         System.out.println("\n\n\n");
+
+        // Lazy Loading 으로 부서정보 찾는 순간 SELECT 로 가져오게 됨
+        Department department = employee.getDepartment();
+        System.out.println("department = " + department);
+
     }
 
 
