@@ -32,11 +32,5 @@ public class Employee {
     @JoinColumn(name="dept_id") // FK 컬럼명
     private Department department;
 
-//    @Override
-//    public String toString() {
-//        return "Employee [id=" + id +
-//                ", name=" + name +
-////                ", department=" + department +
-//                "]";
-//    }
+
 }
