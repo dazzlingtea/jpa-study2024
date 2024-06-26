@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@Rollback(false)
 class DepartmentRepositoryTest {
 
     @Autowired
@@ -82,6 +82,53 @@ class DepartmentRepositoryTest {
         System.out.println("\n\n\n");
 
     }
+
+    @Test
+    @DisplayName("고아 객체 삭제하기")
+    void orphanRemovalTest() {
+        //given
+
+        // 1번 부서 조회
+        Department department = departmentRepository.findById(1L).orElseThrow();
+        // 1번 부서 사원목록 가져오기
+        List<Employee> employeeList = department.getEmployees();
+
+        // 2번 사원 조회
+        Employee employee = employeeList.get(1);
+
+        //when
+
+        // 부서목록에서 사원 삭제 -> Department\
+        department.removeEmployee(employee);
+//        employeeList.remove(employee);
+//        employee.setDepartment(null);
+
+        // 갱신 반영
+//        departmentRepository.save(department);
+
+        //then
+    }
+
+    @Test
+    @DisplayName("양방향관계 리스트에 데이터 추가하면 DB에도 INSERT된다")
+    void cascadePersistTest() {
+        //given
+
+        // 2번 부서 조회
+        Department department = departmentRepository.findById(2L).orElseThrow();
+
+        // 새로운 사원 생성
+        Employee employee = Employee.builder()
+                .name("뽀로로")
+                .build();
+
+        //when
+        department.addEmployee(employee); // 양방향 추가 메서드
+
+
+        //then
+    }
+
 
 
 }
