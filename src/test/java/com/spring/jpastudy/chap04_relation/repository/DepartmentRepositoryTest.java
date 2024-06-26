@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@Rollback(false)
 class DepartmentRepositoryTest {
 
     @Autowired
@@ -41,6 +41,46 @@ class DepartmentRepositoryTest {
         System.out.println("\n\n\n\n");
         employees.forEach(System.out::println);
         System.out.println("\n\n\n\n");
+    }
+    //양방향 연관관계 - 리스트에 데이터 갱신 시 주의사항
+    @Test
+    @DisplayName("양방향 연관관계에서 연관데이터 수정")
+    void changeTest() {
+        //given
+
+        // 3번 사원의 부서를 2번부서에서 1번부서로 수정
+
+        // 3번 사원 정보 조회
+        Employee employee = employeeRepository.findById(3L).orElseThrow();
+
+        // 1번 부서 정보 조회
+        Department department = departmentRepository.findById(1L).orElseThrow();
+
+        //when
+        /*
+            사원정보가 Employee 엔터티에서 수정되어도
+            반대편 엔터티인 Department에서는 리스트에 바로 반영되지 않는다.
+
+            해결방안은 데이터 수정시에 반대편 엔터티에도 같이 수정을 해줘라
+         */
+//        // 사원정보 수정
+//        employee.setDepartment(department);
+//
+//        // 핵심 : 양방향에서는 수정시 반대편도 같이 수정
+//        department.getEmployees().add(employee);
+
+        employee.changeDepartment(department); // 하나의 메서드로 둘 모두 수정
+
+        employeeRepository.save(employee); // setter로 수정 후 다시 save 하면 수정됨
+
+        // 바뀐부서의 사원목록 조회
+        List<Employee> employees = department.getEmployees();
+
+        //then
+        System.out.println("\n\n\n");
+        employees.forEach(System.out::println);
+        System.out.println("\n\n\n");
+
     }
 
 

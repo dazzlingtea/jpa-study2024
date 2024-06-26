@@ -32,5 +32,9 @@ public class Employee {
     @JoinColumn(name="dept_id") // FK 컬럼명
     private Department department;
 
-
+    // 수정시 연관관계 두 객체 모두 수정하는 메서드
+    public void changeDepartment(Department department) {
+        this.department = department;
+        department.getEmployees().add(this);
+    }
 }
