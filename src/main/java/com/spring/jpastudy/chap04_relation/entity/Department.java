@@ -46,7 +46,9 @@ public class Department {
             * ALL : 위의 내용을 전부 포함
      */
 
-    @OneToMany(mappedBy = "department", orphanRemoval = true,
+    @OneToMany(mappedBy = "department",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
             cascade = CascadeType.REMOVE)
     private List<Employee> employees = new ArrayList<>();
 
