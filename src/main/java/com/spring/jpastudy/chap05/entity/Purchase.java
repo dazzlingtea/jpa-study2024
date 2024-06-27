@@ -10,6 +10,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "tbl_mtm_purchase")
 public class Purchase {
@@ -17,9 +18,6 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "purchase_id")
     private Long id;
-
-    @Column(name = "user_name")
-    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

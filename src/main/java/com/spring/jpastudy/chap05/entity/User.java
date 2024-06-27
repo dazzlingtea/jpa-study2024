@@ -12,6 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "tbl_mtm_user")
 public class User {
