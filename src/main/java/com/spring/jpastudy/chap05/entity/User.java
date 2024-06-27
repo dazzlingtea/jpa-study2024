@@ -8,7 +8,7 @@ import java.util.List;
 
 @Setter
 @Getter
-@ToString
+@ToString(exclude = "purchaseList")
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public class User {
 
 //    private List<Goods> goodsList;
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Purchase> purchaseList = new ArrayList<Purchase>();
+    private List<Purchase> purchaseList = new ArrayList<>();
 
 
 }

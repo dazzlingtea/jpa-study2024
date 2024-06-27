@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Setter @Getter
-@ToString
+@ToString(exclude = "purchaseList")
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +21,7 @@ public class Goods {
     private Long id;
     private String name;
 
+    // 상대편에선 날 뭐라고 부르나 -> mappedBy
     @OneToMany(mappedBy = "goods", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Purchase> purchaseList = new ArrayList<Purchase>();
+    private List<Purchase> purchaseList = new ArrayList<>();
 }
