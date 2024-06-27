@@ -206,6 +206,25 @@ class QueryDslBasicTest {
 //        ============= fetch =============
 //        Idol(id=1, idolName=김채원, age=24)
     }
+//    @Test
+//    @DisplayName("이름에 '김'이 포함된 아이돌 조회")
+//    void testNameContains() {
+//        // given
+//        String substring = "김";
+//
+//        // when
+//        List<Idol> result = factory
+//                .selectFrom(idol)
+//                .where(idol.idolName.contains(substring))
+//                .fetch();
+//
+//        // then
+//        assertFalse(result.isEmpty());
+//        for (Idol idol : result) {
+//            System.out.println("Idol: " + idol);
+//            assertTrue(idol.getIdolName().contains(substring));
+//        }
+//    }
     
     @Test
     @DisplayName("나이가 20세에서 25세 사이인 아이돌을 조회하세요.")
