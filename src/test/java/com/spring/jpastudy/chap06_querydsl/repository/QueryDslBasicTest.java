@@ -1,7 +1,9 @@
 package com.spring.jpastudy.chap06_querydsl.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spring.jpastudy.chap06_querydsl.entity.Group;
 import com.spring.jpastudy.chap06_querydsl.entity.Idol;
+import com.spring.jpastudy.chap06_querydsl.entity.QIdol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import static com.spring.jpastudy.chap06_querydsl.entity.QIdol.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -28,6 +31,9 @@ class QueryDslBasicTest {
     // JPA의 CRUD를 제어하는 객체
     @Autowired
     EntityManager em;
+
+    @Autowired
+    JPAQueryFactory factory;
 
     @BeforeEach
     void setUp() {
@@ -69,5 +75,28 @@ class QueryDslBasicTest {
         System.out.println("\n\n\n\n");
     }
 
+    @Test
+    @DisplayName("QueryDsl로 특정 이름의 아이돌 조회하기")
+    void queryDslTest() {
+        //given
+        // QueryDsl로 JPQL을 만드는 빌더
+//        JPAQueryFactory factory = new JPAQueryFactory(em);
+
+        //when
+        Idol foundIdol = factory
+                .select(idol) // 모두 조회
+//                .select(QIdol.idol.idolName) // 특정 필드 조회
+                .from(idol) // QIdol에서 idol 엔터티
+                .where(idol.idolName.eq("사쿠라"))
+                .fetchOne();
+
+        //then
+        assertEquals("르세라핌", foundIdol.getGroup().getGroupName());
+
+        System.out.println("\n\n\n\n");
+        System.out.println("foundIdol = " + foundIdol);
+        System.out.println("foundIdol.getGroup() = " + foundIdol.getGroup());
+        System.out.println("\n\n\n\n");
+    }
 
 }
