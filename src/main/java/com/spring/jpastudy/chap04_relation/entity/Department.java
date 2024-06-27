@@ -50,6 +50,7 @@ public class Department {
             fetch = FetchType.LAZY,
             orphanRemoval = true,
             cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<Employee> employees = new ArrayList<>();
 
     // 양방향 삭제

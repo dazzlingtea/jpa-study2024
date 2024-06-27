@@ -24,5 +24,6 @@ public class Goods {
 
     // 상대편에선 날 뭐라고 부르나 -> mappedBy
     @OneToMany(mappedBy = "goods", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Purchase> purchaseList = new ArrayList<>();
 }
