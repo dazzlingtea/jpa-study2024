@@ -139,52 +139,63 @@ class QueryDslJoinTest {
                     + (g != null ? g.getGroupName() : "솔로가수"));
         }
     }
+    // 연습문제
     @Test
     @DisplayName("문제 1.  ‘아이브’ 그룹에 속한 아이돌의 이름과 그룹명 조회")
-    void innerJoinIveTest() {
+    void practice1Test() {
+        //given
+        String groupName = "아이브";
         //when
-        List<Tuple> tuples = factory.select(idol.idolName, group.groupName)
+        List<Tuple> tuples = factory.select(idol, group)
                 .from(idol)
                 .innerJoin(idol.group, group)
-                .where(idol.group.groupName.eq("아이브"))
+                .where(group.groupName.eq("아이브"))
                 .fetch();
 
         //then
         assertFalse(tuples.isEmpty());
         for (Tuple tuple : tuples) {
-            System.out.println(tuple.toString());
+            System.out.printf("\n#이름: %s, 그룹명: %s\n", tuple.get(idol).getIdolName(), tuple.get(group).getGroupName());
         }
     }
     @Test
     @DisplayName("문제2. 그룹별 평균 나이 계산하여 평균 나이가 22세 이상인 그룹의 그룹명과 평균나이 조회")
-    void innerJoinAvgAgeTest() {
+    void practice2Test() {
         //when
-        List<Tuple> tuples = factory.select(idol.age.avg(), group.groupName)
+        List<Tuple> tuples = factory.select(group.groupName, idol.age.avg())
                 .from(idol)
                 .innerJoin(idol.group, group)
-                .groupBy(group)
+                .groupBy(group.id)
                 .having(idol.age.avg().goe(22)).fetch();
 
         //then
         assertFalse(tuples.isEmpty());
         for (Tuple tuple : tuples) {
-            System.out.println(tuple.toString());
+            String groupName = tuple.get(group.groupName);
+            double averageAge = tuple.get(idol.age.avg());
+            System.out.printf("\n#그룹명: %s, 평균나이: %.2f\n", groupName, averageAge);
         }
     }
     @Test
     @DisplayName("문제3. 2022년에 발매된 앨범이 있는 아이돌의 이름과 그룹명과 앨범명과 발매년도 조회")
     void innerJoinAlbumTest() {
+        //given
+        int year = 2022;
         //when
-        List<Tuple> tuples = factory.select(idol.idolName, group.groupName, album.albumName, album.releaseYear)
+        List<Tuple> tuples = factory.select(idol, album)
                 .from(idol)
                 .innerJoin(idol.group, group)
                 .innerJoin(group.albums, album)
-                .where(album.releaseYear.eq(2022))
+                .where(album.releaseYear.eq(year))
                 .fetch();
         //then
         assertFalse(tuples.isEmpty());
         for (Tuple tuple : tuples) {
-            System.out.println(tuple.toString());
+            Idol i = tuple.get(idol);
+            Album a = tuple.get(album);
+            System.out.printf("\n#아이돌명: %s, 그룹명: %s, 앨범명: %s, 발매연도: %d년\n",
+                    i.getIdolName(), i.getGroup().getGroupName(), a.getAlbumName(), a.getReleaseYear()
+                    );
         }
     }
     
