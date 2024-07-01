@@ -25,7 +25,7 @@ public class Group {
     private List<Idol> idols = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Idol> albums = new ArrayList<>();
+    private List<Album> albums = new ArrayList<>();
 
     public Group(String groupName) {
         this.groupName = groupName;

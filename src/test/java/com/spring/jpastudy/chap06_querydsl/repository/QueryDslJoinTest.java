@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.spring.jpastudy.chap06_querydsl.entity.QAlbum.*;
 import static com.spring.jpastudy.chap06_querydsl.entity.QGroup.group;
 import static com.spring.jpastudy.chap06_querydsl.entity.QIdol.idol;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -138,6 +139,56 @@ class QueryDslJoinTest {
                     + (g != null ? g.getGroupName() : "솔로가수"));
         }
     }
+    @Test
+    @DisplayName("문제 1.  ‘아이브’ 그룹에 속한 아이돌의 이름과 그룹명 조회")
+    void innerJoinIveTest() {
+        //when
+        List<Tuple> tuples = factory.select(idol.idolName, group.groupName)
+                .from(idol)
+                .innerJoin(idol.group, group)
+                .where(idol.group.groupName.eq("아이브"))
+                .fetch();
+
+        //then
+        assertFalse(tuples.isEmpty());
+        for (Tuple tuple : tuples) {
+            System.out.println(tuple.toString());
+        }
+    }
+    @Test
+    @DisplayName("문제2. 그룹별 평균 나이 계산하여 평균 나이가 22세 이상인 그룹의 그룹명과 평균나이 조회")
+    void innerJoinAvgAgeTest() {
+        //when
+        List<Tuple> tuples = factory.select(idol.age.avg(), group.groupName)
+                .from(idol)
+                .innerJoin(idol.group, group)
+                .groupBy(group)
+                .having(idol.age.avg().goe(22)).fetch();
+
+        //then
+        assertFalse(tuples.isEmpty());
+        for (Tuple tuple : tuples) {
+            System.out.println(tuple.toString());
+        }
+    }
+    @Test
+    @DisplayName("문제3. 2022년에 발매된 앨범이 있는 아이돌의 이름과 그룹명과 앨범명과 발매년도 조회")
+    void innerJoinAlbumTest() {
+        //when
+        List<Tuple> tuples = factory.select(idol.idolName, group.groupName, album.albumName, album.releaseYear)
+                .from(idol)
+                .innerJoin(idol.group, group)
+                .innerJoin(group.albums, album)
+                .where(album.releaseYear.eq(2022))
+                .fetch();
+        //then
+        assertFalse(tuples.isEmpty());
+        for (Tuple tuple : tuples) {
+            System.out.println(tuple.toString());
+        }
+    }
+    
+
 
 
 
