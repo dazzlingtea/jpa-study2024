@@ -207,6 +207,93 @@ class QueryDslSubqueryTest {
         }
     }
 
+    @Test
+    @DisplayName("그룹이 존재하지 않는 아이돌 조회")
+    void testFindIdolsWithoutGroup() {
+
+        // 서브쿼리: 아이돌이 특정 그룹에 속하는지 확인
+        JPQLQuery<Long> subQuery = JPAExpressions
+                .select(group.id)
+                .from(group)
+                .where(group.id.eq(idol.group.id));
+
+        // 메인쿼리: 서브쿼리 결과가 존재하지 않는 아이돌 조회
+        List<Idol> result = factory
+                .selectFrom(idol)
+                .where(subQuery.notExists())
+                .fetch();
+
+        assertFalse(result.isEmpty());
+        for (Idol i : result) {
+            System.out.println("\nIdol: " + i.getIdolName());
+        }
+    }
+    @Test
+    @DisplayName("문제 1. 아이브의 평균 나이보다 나이가 많은 여자 아이돌의 이름과 나이 조회")
+    void practice1Test() {
+        //given
+        String groupName = "아이브";
+        //when
+        JPQLQuery<Double> subQuery = JPAExpressions
+                .select(idol.age.avg())
+                .from(idol)
+                .groupBy(idol.group)
+                .where(idol.group.groupName.eq(groupName));
+
+
+        List<Idol> result = factory.select(idol)
+                .from(idol)
+                .where(idol.gender.eq("여").and(idol.age.gt(subQuery))).fetch();
+
+        //then
+        assertFalse(result.isEmpty());
+        for (Idol i : result) {
+            System.out.printf("\n#이름: %s, 나이: %d\n", i.getIdolName(), i.getAge());
+        }
+    }
+    @Test // NOT EXISTS 는 서브쿼리에서 조건이 더 필요
+    @DisplayName("2023년도에 발매된 앨범이 없는 그룹 조회")
+    void practice2Test() {
+        //given
+        int targetYear = 2023;
+        //when
+        JPQLQuery<Long> subQuery = JPAExpressions
+                .select(album.group.id)
+                .from(album)
+                .where(album.releaseYear.eq(targetYear)
+                        .and(album.group.id.eq(group.id)));
+
+        List<Group> result = factory
+                .selectFrom(group)
+                .where(subQuery.notExists())
+                .fetch();
+        //then
+        assertFalse(result.isEmpty());
+        for (Group i : result) {
+            System.out.printf("\n#그룹이름: %s\n", i.getGroupName());
+        }
+    }
+
+    @Test
+    @DisplayName("특정 연도에 발매된 앨범이 없는 그룹 조회")
+    void testFindGroupsWithoutAlbumsInYear() {
+        int targetYear = 2023;
+
+        JPQLQuery<Long> subQuery = JPAExpressions
+                .select(album.group.id)
+                .from(album)
+                .where(album.releaseYear.eq(targetYear));
+
+        List<Group> result = factory
+                .selectFrom(group)
+                .where(group.id.notIn(subQuery))
+                .fetch();
+
+        assertFalse(result.isEmpty());
+        for (Group g : result) {
+            System.out.println("Group: " + g.getGroupName());
+        }
+    }
 
 
 
