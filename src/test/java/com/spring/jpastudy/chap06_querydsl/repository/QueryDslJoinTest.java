@@ -178,7 +178,7 @@ class QueryDslJoinTest {
     }
     @Test
     @DisplayName("문제3. 2022년에 발매된 앨범이 있는 아이돌의 이름과 그룹명과 앨범명과 발매년도 조회")
-    void innerJoinAlbumTest() {
+    void practice3Test() {
         //given
         int year = 2022;
         //when
