@@ -23,7 +23,7 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
     private final JPAQueryFactory factory;
 
     @Override
-    public Page<Event> findEvents(Pageable pageable , String sort) {
+    public Page<Event> findEvents(Pageable pageable, String sort) {
 
         // 페이징을 통한 조회
         List<Event> eventList = factory
@@ -34,9 +34,12 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
                 .fetch();
 
         // 총 데이터 수 조회
-        Long count = factory.select(event.count()).from(event).fetchOne();
+        Long count = factory
+                .select(event.count())
+                .from(event)
+                .fetchOne();
 
-        return new PageImpl<>(eventList, pageable, eventList.size());
+        return new PageImpl<>(eventList, pageable, count);
     }
 
     // 정렬 조건을 처리하는 메서드
