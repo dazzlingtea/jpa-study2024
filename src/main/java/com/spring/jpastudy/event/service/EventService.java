@@ -45,4 +45,9 @@ public class EventService {
         return new EventOneDto(foundEvent);
     }
 
+    // 이벤트 삭제
+    public void deleteEvent(Long eventId) {
+        eventRepository.deleteById(eventId);
+    }
+
 }
